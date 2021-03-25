@@ -1,6 +1,8 @@
-function authController (req, res) {
-  res.contentType('text/plain')
-  res.send('Auth')
-}
+const express = require('express')
 
-module.exports = authController
+const authRouter = express.Router()
+const loginController = require('./loginController')
+
+authRouter.post('/auth/login', loginController)
+
+module.exports = authRouter

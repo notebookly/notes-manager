@@ -1,6 +1,10 @@
+const jwt = require('jsonwebtoken')
 const app = require('../../app')
 const server = app.listen()
 const request = require('supertest').agent(server)
+
+jest.mock('jsonwebtoken')
+jwt.sign.mockReturnValueOnce('token')
 
 const username = 'admin'
 const password = 'hello123'
@@ -36,7 +40,7 @@ describe('routes: /auth/*', () => {
       expect(response.status).toEqual(401)
       expect(response.type).toEqual('application/json')
       expect(response.body.message).toBeDefined()
-      expect(response.body.message).toEqual('Please provide a password to login')
+      expect(response.body.message).toEqual('Please provide a password to login.')
     })
 
     it('should return an error message when username is not set', async () => {
@@ -49,7 +53,7 @@ describe('routes: /auth/*', () => {
       expect(response.status).toEqual(401)
       expect(response.type).toEqual('application/json')
       expect(response.body.message).toBeDefined()
-      expect(response.body.message).toEqual('Please provide a username to login')
+      expect(response.body.message).toEqual('Please provide a username to login.')
     })
 
     it('should return an error message when the user does not exist', async () => {
