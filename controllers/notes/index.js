@@ -24,11 +24,37 @@ async function createNote(req, res) {
     }
   } else {
     res.status(400).send({
-      message: 'Please use a valid format for creating a note'
+      message: 'Please use a valid Note format for creating a note'
+    })
+  }
+}
+
+async function getNote(req, res) {
+  const noteId = req.params.noteId
+  
+  if (noteId) {
+    try {
+      const note = await Note.findOne({ _id: noteId })
+      if (note) {
+        res.send(note)
+      } else {
+        res.status(404).send({
+          message: 'Note not found, please try another noteId.'
+        })
+      }
+    } catch(e) {
+      res.status(500).send({
+        message: 'Something went wrong, please try again.'
+      })
+    }
+  } else {
+    res.status(400).send({
+      message: 'noteId not found in params.'
     })
   }
 }
 
 notesRouter.post('/notes/create', authMiddleware, createNote)
+notesRouter.get('/notes/:noteId', authMiddleware, getNote)
 
 module.exports = notesRouter
